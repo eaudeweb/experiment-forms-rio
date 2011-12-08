@@ -1,10 +1,22 @@
 {% from 'widgets.html' import widget -%}
+{% set species_fields = [
+    'code',
+    'name',
+    'population_resident',
+    'population_migratory_repro',
+    'population_migratory_winter',
+    'population_migratory_transit',
+    'site_population',
+    'site_conservation',
+    'site_isolation',
+    'site_global',
+] %}
 <html>
   <body>
     hi
     <form>
-      {%- for field in form.children %}
-        {{- widget(field) }}
+      {%- for name in species_fields %}
+        {{- widget(form[name]) }}
       {%- endfor %}
     </form>
   </body>
