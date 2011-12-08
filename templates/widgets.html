@@ -1,7 +1,10 @@
 {% set html = form_generator %}
 
 {% macro widget(field) %}
-  {%- set macro = {'input': input}[field.properties.widget] or input -%}
+  {%- set macro = {
+      'input': input,
+      'radio': radio,
+    }[field.properties.widget] or input -%}
   {{- macro(field) -}}
 {% endmacro %}
 
@@ -10,6 +13,17 @@
 <fieldset>
   {{ html.label(field, contents=field.label) }}
   {{ html.input(field, type=field.properties.type) }}
+</fieldset>
+  {%- do html.end() %}
+{% endmacro %}
+
+{% macro radio(field) %}
+  {%- do html.begin(auto_domid=true, auto_for=true) %}
+<fieldset>
+  {{ html.label(field, contents=field.label) }}
+  {% for value in field.valid_values %}
+    {{ html.input(field, type="radio", value=value) }}
+  {% endfor %}
 </fieldset>
   {%- do html.end() %}
 {% endmacro %}

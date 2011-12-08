@@ -1,7 +1,7 @@
 import flatland
 
 
-Enum_abc = flatland.Enum.valued('A', 'B', 'C')
+Enum_abc = flatland.Enum.valued('A', 'B', 'C').with_properties(widget='radio')
 
 class Species(flatland.Form):
     code = flatland.Integer
