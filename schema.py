@@ -1,16 +1,31 @@
-import flatland
+import flatland as fl
 
 
-Enum_abc = flatland.Enum.valued('A', 'B', 'C').with_properties(widget='radio')
+Enum_abc = fl.Enum.valued('A', 'B', 'C').with_properties(widget='radio')
 
-class Species(flatland.Form):
-    code = flatland.Integer
-    name = flatland.String
-    population_resident = flatland.String
-    population_migratory_repro = flatland.String
-    population_migratory_winter = flatland.String
-    population_migratory_transit = flatland.String
-    site_population = Enum_abc
-    site_conservation = Enum_abc
-    site_isolation = Enum_abc
-    site_global = Enum_abc
+
+Species = fl.Dict.of(
+    fl.Integer.named('code'),
+    fl.String.named('name'),
+    fl.Dict.of(
+            fl.String.named('resident'),
+            fl.Dict.of(
+                    fl.String.named('repro'),
+                    fl.String.named('winter'),
+                    fl.String.named('transit'),
+                ).named('migratory').with_properties(
+                    widget='dict',
+                    order=['repro', 'winter', 'transit'],
+                ),
+        ).named('population').with_properties(
+            widget='dict',
+            order=['resident', 'migratory']),
+    fl.Dict.of(
+            Enum_abc.named('population'),
+            Enum_abc.named('conservation'),
+            Enum_abc.named('isolation'),
+            Enum_abc.named('global'),
+        ).named('site').with_properties(
+            widget='dict',
+            order=['population', 'conservation', 'isolation', 'global']),
+).with_properties(order=['code', 'name', 'population', 'site'])
