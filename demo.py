@@ -23,5 +23,15 @@ def index():
     return flask.render_template('index.html', schema=Species(), rows=rows)
 
 
+@app.route('/save', methods=['POST'])
+def save():
+    import flatland
+    from pprint import pformat
+    from werkzeug.utils import escape
+    SpeciesList = flatland.List.of(Species)
+    sl = SpeciesList.from_flat(flask.request.form.to_dict())
+    return "<pre>" + escape(pformat(sl.value)) + "</pre>"
+
+
 if __name__ == '__main__':
     app.run(debug=True)
