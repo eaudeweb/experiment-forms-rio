@@ -1,4 +1,4 @@
-{% from 'widgets.html' import widget -%}
+{% from 'widgets.html' import widget, label -%}
 <html>
   <body>
     hi
@@ -8,14 +8,16 @@
 
         <thead>
         {%- for name in form.properties.order %}
-          <th>{{ name }}</th>
+          {{ label(form[name]) }}
         {%- endfor %}
         </thead>
 
         <tbody>
-        {%- for name in form.properties.order %}
-          <td>{{- widget(form[name]) }}</td>
-        {%- endfor %}
+          <tr>
+          {%- for name in form.properties.order %}
+            {{- widget(form[name]) }}
+          {%- endfor %}
+          </tr>
         </tbody>
 
       </table>

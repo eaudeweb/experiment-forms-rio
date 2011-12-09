@@ -11,22 +11,42 @@
 
 {% macro input(field) %}
   {%- do html.begin(auto_domid=true, auto_for=true) %}
-  {{ html.input(field, type=field.properties.type) }}
+  <td>{{ html.input(field, type=field.properties.type) }}</td>
   {%- do html.end() %}
 {% endmacro %}
 
 {% macro radio(field) %}
   {%- do html.begin(auto_domid=true, auto_for=true) %}
+  <td>
   {% for value in field.valid_values %}
     {{ html.input(field, type="radio", value=value) }}
   {% endfor %}
+  </td>
   {%- do html.end() %}
 {% endmacro %}
 
 {% macro dict(field) %}
-{
   {%- for child_name in field.properties.order %}
-  {{ child_name }}: {{ widget(field[child_name]) }}
+  {{ widget(field[child_name]) }}
   {% endfor -%}
-}
+{% endmacro %}
+
+
+
+{% macro label(field) %}
+  {%- set macro = {
+      'input': simple_label,
+      'dict': nested_label,
+    }[field.properties.widget] or simple_label -%}
+  {{- macro(field) -}}
+{% endmacro %}
+
+{% macro simple_label(field) %}
+  <th>{{ field.label }}</th>
+{% endmacro %}
+
+{% macro nested_label(field) %}
+  {%- for child_name in field.properties.order %}
+  {{ label(field[child_name]) }}
+  {% endfor -%}
 {% endmacro %}
