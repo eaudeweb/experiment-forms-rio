@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# encoding: utf-8
 
 import flask
 from flatland.out.markup import Generator
@@ -14,7 +15,12 @@ app.jinja_env.globals['form_generator'] = Generator('html')
 
 @app.route('/')
 def index():
-    return flask.render_template('index.html', form=Species())
+    rows = [
+        Species({'name': u'cioară', 'site': {'isolation': 'B'}}, name='1'),
+        Species({'name': u'rață', 'site': {'isolation': 'C'}}, name='2'),
+        Species(),
+    ]
+    return flask.render_template('index.html', schema=Species(), rows=rows)
 
 
 if __name__ == '__main__':

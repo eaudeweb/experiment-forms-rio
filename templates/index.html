@@ -7,17 +7,19 @@
       <table>
 
         <thead>
-        {%- for name in form.properties.order %}
-          {{ label(form[name]) }}
+        {%- for name in schema.properties.order %}
+          {{ label(schema[name]) }}
         {%- endfor %}
         </thead>
 
         <tbody>
+        {% for item in rows %}
           <tr>
-          {%- for name in form.properties.order %}
-            {{- widget(form[name]) }}
+          {%- for name in item.properties.order %}
+            {{- widget(item[name]) }}
           {%- endfor %}
           </tr>
+        {% endfor %}
         </tbody>
 
       </table>
