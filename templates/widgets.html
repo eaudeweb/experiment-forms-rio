@@ -9,9 +9,18 @@
   {{- macro(field) -}}
 {% endmacro %}
 
+{% macro errors(field) %}
+  {% for msg in field.errors %}
+    <span class="error">{{ msg }}</span>
+  {% endfor -%}
+{% endmacro %}
+
 {% macro input(field) %}
   {%- do html.begin(auto_domid=true, auto_for=true) %}
-  <td>{{ html.input(field, type=field.properties.type) }}</td>
+  <td>
+  {{ html.input(field, type=field.properties.type) }}
+  {{- errors(field) -}}
+  </td>
   {%- do html.end() %}
 {% endmacro %}
 
@@ -21,6 +30,7 @@
   {% for value in field.valid_values %}
     {{ html.input(field, type="radio", value=value) }}
   {% endfor %}
+  {{- errors(field) -}}
   </td>
   {%- do html.end() %}
 {% endmacro %}

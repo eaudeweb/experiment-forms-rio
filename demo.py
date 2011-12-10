@@ -13,6 +13,15 @@ app.jinja_options = dict(app.jinja_options, extensions=_my_extensions)
 app.jinja_env.globals['form_generator'] = Generator('html')
 
 
+from flatland.signals import validator_validated
+from flatland.schema.base import NotEmpty
+@validator_validated.connect
+def validated(sender, element, result, **kwargs):
+    if sender is NotEmpty:
+        if not result:
+            element.add_error("required")
+
+
 @app.route('/')
 def index():
     rows = [
@@ -30,7 +39,12 @@ def save():
     from werkzeug.utils import escape
     SpeciesList = flatland.List.of(Species)
     sl = SpeciesList.from_flat(flask.request.form.to_dict())
-    return "<pre>" + escape(pformat(sl.value)) + "</pre>"
+
+    if sl.validate():
+        return "<pre>" + escape(pformat(sl.value)) + "</pre>"
+
+    else:
+        return flask.render_template('index.html', schema=Species(), rows=sl)
 
 
 if __name__ == '__main__':
